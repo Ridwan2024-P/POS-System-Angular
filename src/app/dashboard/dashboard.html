@@ -46,19 +46,8 @@
           class="left rounded-2xl p-5 border border-gray-100 max-h-[100vh] overflow-y-auto pr-2 scrollbar-thin"
         >
           <div class="w-full">
-            @if (errorMessage) {
-              <hlm-alert class="border-red-200 bg-red-50 text-red-900 mb-3">
-                <ng-icon name="lucideAlertTriangle" />
-
-                <h4 hlmAlertTitle>Required Information</h4>
-
-                <p hlmAlertDescription>
-                  {{ errorMessage }}
-                </p>
-              </hlm-alert>
-            }
             @if (successMessage) {
-              <hlm-alert class="border-green-200 bg-green-50 text-green-900 mb-3" >
+              <hlm-alert class="border-green-200 bg-green-50 text-green-900 mb-3">
                 <h4 hlmAlertTitle>Order Placed</h4>
 
                 <p hlmAlertDescription>
@@ -144,6 +133,17 @@
               <h3 class="mb-5 text-lg font-bold text-gray-900">Customer</h3>
 
               <div>
+                @if (errorMessage) {
+                  <hlm-alert class="border-red-200 bg-red-50 text-red-900 mb-3">
+                    <ng-icon name="lucideAlertTriangle" />
+
+                    <h4 hlmAlertTitle>Required Information</h4>
+
+                    <p hlmAlertDescription>
+                      {{ errorMessage }}
+                    </p>
+                  </hlm-alert>
+                }
                 <div>
                   <label class="mb-1.5 block text-sm font-medium text-gray-700"> Name </label>
 
@@ -237,6 +237,13 @@
                 *ngFor="let line of cart"
                 class="flex items-center gap-3 border-b border-gray-100 py-3 last:border-0"
               >
+                <div class="h-12 w-12 shrink-0 overflow-hidden rounded-xl bg-gray-100">
+                  <img
+                    [src]="line.item.image"
+                    [alt]="line.item.name"
+                    class="h-full w-full object-cover"
+                  />
+                </div>
                 <div class="min-w-0 flex-1">
                   <p class="truncate text-sm font-semibold text-gray-900">
                     {{ line.item.name }}
