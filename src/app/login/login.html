@@ -7,7 +7,7 @@
     <div hlmCardContent>
       @if (errorMessage) {
         <hlm-alert
-          class="max-w-md border-amber-200 bg-amber-50 text-amber-900 dark:border-amber-900 dark:bg-amber-950 dark:text-amber-50"
+          class="max-w-md border-amber-200 bg-amber-50 text-amber-900 dark:border-amber-900 dark:bg-amber-950 dark:text-amber-50 mb-2"
         >
           <ng-icon name="lucideAlertTriangle" />
           <h4 hlmAlertTitle>Login Failed</h4>
@@ -17,7 +17,7 @@
       <form id="login-form" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
         <div class="flex flex-col gap-6">
           <div class="grid gap-2">
-            <label class="mb-2" hlmFieldLabel for="email">Email</label>
+            <label class="mb-2" hlmLabel for="email">Email</label>
             <input
               type="email"
               id="email"
