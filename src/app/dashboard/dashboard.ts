@@ -280,6 +280,7 @@ export class Dashboard implements OnInit {
     this.customerPhone = '';
     this.customerEmail = '';
     this.orderType = 'dine-in';
+    this.submitted = false;
   }
 
   logout(): void {

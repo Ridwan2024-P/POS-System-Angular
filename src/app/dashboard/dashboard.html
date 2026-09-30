@@ -145,6 +145,7 @@
 
                   <input
                     type="text"
+                    [(ngModel)]="customerName"
                     [ngClass]="{
                       'border-red-500': submitted && !customerName,
                       'border-gray-200': !(submitted && !customerName),
@@ -163,6 +164,7 @@
 
                   <input
                     type="text"
+                    [(ngModel)]="customerPhone"
                     [ngClass]="{
                       'border-red-500': submitted && !customerPhone,
                       'border-gray-200': !(submitted && !customerPhone),
@@ -181,6 +183,7 @@
 
                   <input
                     type="email"
+                    [(ngModel)]="customerEmail"
                     [ngClass]="{
                       'border-red-500': submitted && !customerEmail,
                       'border-gray-200': !(submitted && !customerEmail),
