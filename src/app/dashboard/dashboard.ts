@@ -16,6 +16,10 @@ import { lucideAlertTriangle } from '@ng-icons/lucide';
 import { MenuService, MenuItem } from '../services/menu.service';
 import { ChangeDetectorRef } from '@angular/core';
 
+import { HlmSwitch } from '@spartan-ng/helm/switch';
+import { HlmLabel } from '@spartan-ng/helm/label';
+
+
 interface NavItem {
   id: string;
   label: string;
@@ -49,6 +53,7 @@ interface Order {
     HlmTableImports,
     HlmAlertImports,
     NgIcon,
+    HlmLabel, HlmSwitch
   ],
 
   templateUrl: './dashboard.html',
