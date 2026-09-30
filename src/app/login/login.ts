@@ -18,6 +18,7 @@ import { HlmAlertImports } from '@spartan-ng/helm/alert';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { lucideAlertTriangle } from '@ng-icons/lucide';
 import { ChangeDetectorRef } from '@angular/core';
+import { AuthService } from '../services/auth';
 
 @Component({
   imports: [
@@ -39,9 +40,8 @@ import { ChangeDetectorRef } from '@angular/core';
 export class Login {
   constructor(
     private router: Router,
-    private http: HttpClient,
-    private cdr: ChangeDetectorRef
-,
+    private cdr: ChangeDetectorRef,
+    private authService: AuthService,
   ) {}
   loginForm = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
@@ -51,14 +51,14 @@ export class Login {
 
   errorMessage: string = '';
   onSubmit() {
-     this.errorMessage = '';
+    this.errorMessage = '';
     if (this.loginForm.invalid) {
       this.loginForm.markAllAsTouched();
       return;
     }
     const { email, password } = this.loginForm.value;
 
-    this.http.get<any[]>('/login.json').subscribe((users) => {
+    this.authService.getUsers().subscribe((users) => {
       const admin = users.find(
         (u) => u.email === email && u.password === password && u.role === 'admin',
       );
@@ -82,7 +82,7 @@ export class Login {
         this.router.navigate(['/dashboard']);
       } else {
         this.errorMessage = 'Invalid email or password';
-         this.cdr.detectChanges();
+        this.cdr.detectChanges();
       }
     });
   }
