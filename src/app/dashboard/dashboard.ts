@@ -19,6 +19,7 @@ import { ChangeDetectorRef } from '@angular/core';
 import { HlmSwitch } from '@spartan-ng/helm/switch';
 import { HlmLabel } from '@spartan-ng/helm/label';
 import { Bill } from '../bill/bill';
+import { Cart } from '../cart/cart';
 
 
 interface NavItem {
@@ -55,7 +56,8 @@ interface Order {
     HlmAlertImports,
     NgIcon,
     HlmLabel, HlmSwitch,
-    Bill
+    Bill,
+    Cart
 ],
 
   templateUrl: './dashboard.html',
@@ -115,6 +117,8 @@ export class Dashboard implements OnInit {
   orders: Order[] = [];
 
   sidebarOpen = false;
+
+  submitted = false;
 
   constructor(
     private router: Router,
@@ -210,6 +214,7 @@ export class Dashboard implements OnInit {
   }
 
   checkout(): void {
+    this.submitted = true;
     this.errorMessage = '';
     this.successMessage = '';
 

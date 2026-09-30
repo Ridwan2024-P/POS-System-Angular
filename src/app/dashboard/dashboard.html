@@ -145,11 +145,17 @@
 
                   <input
                     type="text"
-                    [(ngModel)]="customerName"
+                    [ngClass]="{
+                      'border-red-500': submitted && !customerName,
+                      'border-gray-200': !(submitted && !customerName),
+                    }"
                     name="customerName"
                     placeholder="Customer name"
                     class="w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm outline-none transition focus:border-gray-900 focus:bg-white"
                   />
+                  @if (submitted && !customerName) {
+                    <p class="mt-1 text-xs text-red-600">Customer name is required.</p>
+                  }
                 </div>
 
                 <div class="mt-4">
@@ -157,11 +163,17 @@
 
                   <input
                     type="text"
-                    [(ngModel)]="customerPhone"
+                    [ngClass]="{
+                      'border-red-500': submitted && !customerPhone,
+                      'border-gray-200': !(submitted && !customerPhone),
+                    }"
                     name="customerPhone"
                     placeholder="Phone number"
                     class="w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm outline-none transition focus:border-gray-900 focus:bg-white"
                   />
+                  @if (submitted && !customerName.trim()) {
+                    <p class="mt-1 text-xs text-red-600">Phone number required.</p>
+                  }
                 </div>
 
                 <div class="mt-4">
@@ -169,11 +181,17 @@
 
                   <input
                     type="email"
-                    [(ngModel)]="customerEmail"
+                    [ngClass]="{
+                      'border-red-500': submitted && !customerEmail,
+                      'border-gray-200': !(submitted && !customerEmail),
+                    }"
                     name="customerEmail"
                     placeholder="Email address"
                     class="w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm outline-none transition focus:border-gray-900 focus:bg-white"
                   />
+                  @if (submitted && !customerEmail) {
+                    <p class="mt-1 text-xs text-red-600">Email address is required.</p>
+                  }
                 </div>
 
                 <div class="mt-2 grid grid-cols-1 gap-2 pt-4">
@@ -277,17 +295,14 @@
                 </div>
               </div>
             </div>
-
-            <app-bill
-              [cartTotal]="cartTotal"
-              [cartLength]="cart.length"
-              [errorMessage]="errorMessage"
-              [successMessage]="successMessage"
-              (checkoutClicked)="checkout()"
-            ></app-bill>
-
-            
           </div>
+          <app-bill
+            [cartTotal]="cartTotal"
+            [cartLength]="cart.length"
+            [errorMessage]="errorMessage"
+            [successMessage]="successMessage"
+            (checkoutClicked)="checkout()"
+          ></app-bill>
         </div>
       </div>
     </div>
