@@ -47,11 +47,11 @@
         >
           <div class="w-full">
             @if (successMessage) {
-            <hlm-alert class="border-green-200 bg-green-50 text-green-900 mb-3">
-              <h4 hlmAlertTitle>Order Placed</h4>
+              <hlm-alert class="border-green-200 bg-green-50 text-green-900 mb-3">
+                <h4 hlmAlertTitle>Order Placed</h4>
 
-              <p hlmAlertDescription>{{ successMessage }}</p>
-            </hlm-alert>
+                <p hlmAlertDescription>{{ successMessage }}</p>
+              </hlm-alert>
             }
             <div
               class="flex w-full items-center rounded-full border border-gray-200 bg-gray-100 px-4 py-2 mb-5"
@@ -88,13 +88,9 @@
               *ngFor="let skeleton of [1, 2, 3, 4, 5, 6, 7, 8]"
               class="rounded-2xl border border-gray-200 bg-white p-4"
             >
-              <div
-                class="mb-3 h-28 w-full animate-pulse rounded-xl bg-gray-200"
-              ></div>
+              <div class="mb-3 h-28 w-full animate-pulse rounded-xl bg-gray-200"></div>
 
-              <div
-                class="mb-2 h-4 w-3/4 animate-pulse rounded bg-gray-200"
-              ></div>
+              <div class="mb-2 h-4 w-3/4 animate-pulse rounded bg-gray-200"></div>
 
               <div class="h-5 w-1/3 animate-pulse rounded bg-gray-200"></div>
             </div>
@@ -124,34 +120,28 @@
                 {{ item.name }}
               </div>
 
-              <div class="text-base font-bold text-gray-700">
-                ৳ {{ item.price.toFixed(2) }}
-              </div>
+              <div class="text-base font-bold text-gray-700">৳ {{ item.price.toFixed(2) }}</div>
             </button>
           </div>
         </div>
 
         <div class="right">
           <div class="customer-details">
-            <form
-              class="w-full rounded-2xl border border-gray-200 bg-white p-5"
-            >
+            <form class="w-full rounded-2xl border border-gray-200 bg-white p-5">
               <h3 class="mb-5 text-lg font-bold text-gray-900">Customer</h3>
 
               <div>
                 @if (errorMessage) {
-                <hlm-alert class="border-red-200 bg-red-50 text-red-900 mb-3">
-                  <ng-icon name="lucideAlertTriangle" />
+                  <hlm-alert class="border-red-200 bg-red-50 text-red-900 mb-3">
+                    <ng-icon name="lucideAlertTriangle" />
 
-                  <h4 hlmAlertTitle>Required Information</h4>
+                    <h4 hlmAlertTitle>Required Information</h4>
 
-                  <p hlmAlertDescription>{{ errorMessage }}</p>
-                </hlm-alert>
+                    <p hlmAlertDescription>{{ errorMessage }}</p>
+                  </hlm-alert>
                 }
                 <div>
-                  <label class="mb-1.5 block text-sm font-medium text-gray-700">
-                    Name
-                  </label>
+                  <label class="mb-1.5 block text-sm font-medium text-gray-700"> Name </label>
 
                   <input
                     type="text"
@@ -163,9 +153,7 @@
                 </div>
 
                 <div class="mt-4">
-                  <label class="mb-1.5 block text-sm font-medium text-gray-700">
-                    Phone
-                  </label>
+                  <label class="mb-1.5 block text-sm font-medium text-gray-700"> Phone </label>
 
                   <input
                     type="text"
@@ -177,9 +165,7 @@
                 </div>
 
                 <div class="mt-4">
-                  <label class="mb-1.5 block text-sm font-medium text-gray-700">
-                    Email
-                  </label>
+                  <label class="mb-1.5 block text-sm font-medium text-gray-700"> Email </label>
 
                   <input
                     type="email"
@@ -190,24 +176,34 @@
                   />
                 </div>
 
-                <div class="grid grid-cols-1 gap-2 pt-4 mt-2">
-                  <div class="w-full">
-                    <div class="w-full">
-                      <label
-                        class="flex w-full cursor-pointer items-center justify-between rounded-lg border bg-gray-50 px-4 py-3 text-sm font-medium text-gray-700"
-                        hlmLabel
-                      >
-                        <span>
-                          {{ orderType === 'parcel' ? 'Parcel' : 'Dine-in' }}
+                <div class="mt-2 grid grid-cols-1 gap-2 pt-4">
+                  <label
+                    hlmLabel
+                    class="flex w-full cursor-pointer items-center justify-between rounded-xl border border-gray-200 bg-white px-4 py-3  hover:border-gray-300"
+                  >
+                    <div class="flex items-center gap-3">
+                      <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-gray-100">
+                        <span class="text-sm">
+                          {{ orderType === 'parcel' ? '📦' : '🍽️' }}
                         </span>
+                      </div>
 
-                        <hlm-switch
-                          [checked]="orderType === 'parcel'"
-                          (checkedChange)="orderType = $event ? 'parcel' : 'dine-in'"
-                        />
-                      </label>
+                      <div>
+                        <p class="text-sm font-semibold text-gray-800">
+                          {{ orderType === 'parcel' ? 'Parcel Order' : 'Dine-in Order' }}
+                        </p>
+
+                        <p class="text-xs text-gray-500">
+                          {{ orderType === 'parcel' ? 'Customer takeaway' : 'Customer dining in' }}
+                        </p>
+                      </div>
                     </div>
-                  </div>
+
+                    <hlm-switch
+                      [checked]="orderType === 'parcel'"
+                      (checkedChange)="orderType = $event ? 'parcel' : 'dine-in'"
+                    />
+                  </label>
                 </div>
               </div>
             </form>
@@ -239,9 +235,7 @@
                 *ngFor="let line of cart"
                 class="flex items-center gap-3 border-b border-gray-100 py-3 last:border-0"
               >
-                <div
-                  class="h-12 w-12 shrink-0 overflow-hidden rounded-xl bg-gray-100"
-                >
+                <div class="h-12 w-12 shrink-0 overflow-hidden rounded-xl bg-gray-100">
                   <img
                     [src]="line.item.image"
                     [alt]="line.item.name"
@@ -253,14 +247,10 @@
                     {{ line.item.name }}
                   </p>
 
-                  <p class="mt-1 text-xs text-gray-400">
-                    ৳ {{ line.item.price.toFixed(2) }}
-                  </p>
+                  <p class="mt-1 text-xs text-gray-400">৳ {{ line.item.price.toFixed(2) }}</p>
                 </div>
 
-                <div
-                  class="flex items-center rounded-lg border border-gray-200"
-                >
+                <div class="flex items-center rounded-lg border border-gray-200">
                   <button
                     type="button"
                     (click)="decreaseQty(line)"
@@ -289,31 +279,26 @@
             </div>
 
             <div class="bill-details mt-5">
-              <div
-                class="w-full rounded-2xl border border-gray-200 bg-white p-5"
-              >
+              <div class="w-full rounded-2xl border border-gray-200 bg-white p-5">
                 <h3 class="mb-5 text-lg font-bold text-gray-900">Bill</h3>
                 @if (errorMessage) {
-                <hlm-alert class="border-red-200 bg-red-50 text-red-900 mb-3">
-                  <ng-icon name="lucideAlertTriangle" />
+                  <hlm-alert class="border-red-200 bg-red-50 text-red-900 mb-3">
+                    <ng-icon name="lucideAlertTriangle" />
 
-                  <h4 hlmAlertTitle>Required Information</h4>
+                    <h4 hlmAlertTitle>Required Information</h4>
 
-                  <p hlmAlertDescription>{{ errorMessage }}</p>
-                </hlm-alert>
-                } @if (successMessage) {
-                <hlm-alert
-                  class="border-green-200 bg-green-50 text-green-900 mb-3"
-                >
-                  <h4 hlmAlertTitle>Order Placed</h4>
+                    <p hlmAlertDescription>{{ errorMessage }}</p>
+                  </hlm-alert>
+                }
+                @if (successMessage) {
+                  <hlm-alert class="border-green-200 bg-green-50 text-green-900 mb-3">
+                    <h4 hlmAlertTitle>Order Placed</h4>
 
-                  <p hlmAlertDescription>{{ successMessage }}</p>
-                </hlm-alert>
+                    <p hlmAlertDescription>{{ successMessage }}</p>
+                  </hlm-alert>
                 }
                 <div class="space-y-3">
-                  <div
-                    class="flex items-center justify-between text-sm text-gray-500"
-                  >
+                  <div class="flex items-center justify-between text-sm text-gray-500">
                     <span>Subtotal</span>
 
                     <span> ৳ {{ cartTotal.toFixed(2) }} </span>
@@ -321,9 +306,7 @@
 
                   <div class="border-t border-gray-100 pt-4">
                     <div class="flex items-center justify-between">
-                      <span class="text-base font-semibold text-gray-900">
-                        Total
-                      </span>
+                      <span class="text-base font-semibold text-gray-900"> Total </span>
 
                       <span class="text-xl font-bold text-gray-900">
                         ৳ {{ cartTotal.toFixed(2) }}
@@ -362,9 +345,7 @@
       >
         <h3 class="text-lg font-semibold text-gray-900">No orders yet</h3>
 
-        <p class="mt-2 text-sm text-gray-500">
-          Orders will appear here after checkout.
-        </p>
+        <p class="mt-2 text-sm text-gray-500">Orders will appear here after checkout.</p>
       </div>
 
       <div
@@ -413,17 +394,12 @@
 
               <td hlmTableCell>
                 <div class="flex flex-col gap-1">
-                  <div
-                    *ngFor="let line of order.items"
-                    class="flex items-center gap-2"
-                  >
+                  <div *ngFor="let line of order.items" class="flex items-center gap-2">
                     <span class="font-medium text-gray-700">
                       {{ line.item.name }}
                     </span>
 
-                    <span class="text-sm text-gray-500">
-                      × {{ line.quantity }}
-                    </span>
+                    <span class="text-sm text-gray-500"> × {{ line.quantity }} </span>
                   </div>
                 </div>
               </td>
