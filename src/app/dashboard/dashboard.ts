@@ -14,6 +14,7 @@ import { NgIcon, provideIcons } from '@ng-icons/core';
 import { HlmAlertImports } from '@spartan-ng/helm/alert';
 import { lucideAlertTriangle } from '@ng-icons/lucide';
 import { MenuService, MenuItem } from '../services/menu.service';
+import { ChangeDetectorRef } from '@angular/core';
 
 interface NavItem {
   id: string;
@@ -112,6 +113,7 @@ export class Dashboard implements OnInit {
     private http: HttpClient,
     private router: Router,
     private menuService: MenuService,
+     private cdr: ChangeDetectorRef,
   ) {
     if (typeof window !== 'undefined') {
       const admin = window.localStorage.getItem('admin');
@@ -145,11 +147,13 @@ export class Dashboard implements OnInit {
         console.log('FILTERED:', this.filteredMenuItems);
 
         this.loading = false;
+         this.cdr.detectChanges();
       },
 
       error: (error) => {
         console.error('MENU ERROR:', error);
         this.loading = false;
+       
       },
     });
   }
