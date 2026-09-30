@@ -1,19 +1,22 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit } from '@angular/core';
 
-import { CommonModule } from "@angular/common";
-import { FormsModule } from "@angular/forms";
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
-import { Observable } from "rxjs";
-import { HttpClient } from "@angular/common/http";
-import { Router } from "@angular/router";
+import { Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
 
-import { HlmButtonImports } from "@spartan-ng/helm/button";
-import { HlmSidebarImports } from "@spartan-ng/helm/sidebar";
-import { HlmTableImports } from "@spartan-ng/helm/table";
+import { HlmButtonImports } from '@spartan-ng/helm/button';
+import { HlmSidebarImports } from '@spartan-ng/helm/sidebar';
+import { HlmTableImports } from '@spartan-ng/helm/table';
 
-import { lucideHouse, lucideInbox, lucideSettings } from "@ng-icons/lucide";
+import { lucideHouse, lucideInbox, lucideSettings } from '@ng-icons/lucide';
 
-import { NgIcon, provideIcons } from "@ng-icons/core";
+import { NgIcon, provideIcons } from '@ng-icons/core';
+import { HlmAlertImports } from '@spartan-ng/helm/alert';
+
+import { lucideAlertTriangle } from '@ng-icons/lucide';
 
 interface NavItem {
   id: string;
@@ -39,27 +42,20 @@ interface Order {
   customerName: string;
   customerPhone: string;
   customerEmail: string;
-  orderType: "dine-in" | "parcel";
+  orderType: 'dine-in' | 'parcel';
   items: CartLine[];
   total: number;
   date: string;
 }
 
 @Component({
-  selector: "app-dashboard",
+  selector: 'app-dashboard',
 
-  imports: [
-    CommonModule,
-    FormsModule,
-    HlmSidebarImports,
-    HlmButtonImports,
+  imports: [CommonModule, FormsModule, HlmSidebarImports, HlmButtonImports, HlmTableImports,HlmAlertImports, NgIcon],
 
-    HlmTableImports,
-  ],
+  templateUrl: './dashboard.html',
 
-  templateUrl: "./dashboard.html",
-
-  styleUrl: "./dashboard.css",
+  styleUrl: './dashboard.css',
 
   providers: [
     provideIcons({
@@ -72,39 +68,42 @@ interface Order {
 export class Dashboard implements OnInit {
   allNavItems: NavItem[] = [
     {
-      id: "POS",
-      label: "POS",
+      id: 'POS',
+      label: 'POS',
       adminOnly: false,
     },
 
     {
-      id: "orders",
-      label: "Orders",
+      id: 'orders',
+      label: 'Orders',
       adminOnly: true,
     },
   ];
 
   visibleNavItems: NavItem[] = [];
 
-  activeView = "POS";
+  activeView = 'POS';
 
   menuItems: MenuItem[] = [];
 
   categories: string[] = [];
 
-  selectedCategory = "All";
+  selectedCategory = 'All';
 
-  searchText = "";
+  searchText = '';
 
   loading = true;
 
-  customerName = "";
+  customerName = '';
 
-  customerPhone = "";
+  customerPhone = '';
 
-  customerEmail = "";
+  customerEmail = '';
+  errorMessage = '';
 
-  orderType: "dine-in" | "parcel" = "dine-in";
+  successMessage = '';
+
+  orderType: 'dine-in' | 'parcel' = 'dine-in';
 
   cart: CartLine[] = [];
 
@@ -116,49 +115,42 @@ export class Dashboard implements OnInit {
     private http: HttpClient,
     private router: Router,
   ) {
-    if (typeof window !== "undefined") {
-      const admin = window.localStorage.getItem("admin");
+    if (typeof window !== 'undefined') {
+      const admin = window.localStorage.getItem('admin');
 
-      const employee = window.localStorage.getItem("employee");
+      const employee = window.localStorage.getItem('employee');
 
       if (admin) {
         this.visibleNavItems = this.allNavItems;
       } else if (employee) {
-        this.visibleNavItems = this.allNavItems.filter(
-          (item) => item.id !== "orders",
-        );
+        this.visibleNavItems = this.allNavItems.filter((item) => item.id !== 'orders');
       } else {
-        this.visibleNavItems = this.allNavItems.filter(
-          (item) => !item.adminOnly,
-        );
+        this.visibleNavItems = this.allNavItems.filter((item) => !item.adminOnly);
       }
     }
   }
 
   getMenuItems(): Observable<MenuItem[]> {
-    return this.http.get<MenuItem[]>("/menu.json");
+    return this.http.get<MenuItem[]>('/menu.json');
   }
 
   ngOnInit(): void {
     this.getMenuItems().subscribe({
       next: (items) => {
-        console.log("API DATA:", items);
+        console.log('API DATA:', items);
 
         this.menuItems = items;
 
-        this.categories = [
-          "All",
-          ...Array.from(new Set(items.map((item) => item.category))),
-        ];
+        this.categories = ['All', ...Array.from(new Set(items.map((item) => item.category)))];
 
-        console.log("MENU ITEMS:", this.menuItems);
-        console.log("FILTERED:", this.filteredMenuItems);
+        console.log('MENU ITEMS:', this.menuItems);
+        console.log('FILTERED:', this.filteredMenuItems);
 
         this.loading = false;
       },
 
       error: (error) => {
-        console.error("MENU ERROR:", error);
+        console.error('MENU ERROR:', error);
         this.loading = false;
       },
     });
@@ -173,12 +165,9 @@ export class Dashboard implements OnInit {
   get filteredMenuItems(): MenuItem[] {
     return this.menuItems.filter((item) => {
       const categoryMatch =
-        this.selectedCategory === "All" ||
-        item.category === this.selectedCategory;
+        this.selectedCategory === 'All' || item.category === this.selectedCategory;
 
-      const searchMatch = item.name
-        .toLowerCase()
-        .includes(this.searchText.toLowerCase());
+      const searchMatch = item.name.toLowerCase().includes(this.searchText.toLowerCase());
 
       return categoryMatch && searchMatch;
     });
@@ -219,27 +208,32 @@ export class Dashboard implements OnInit {
   }
 
   checkout(): void {
-    if (this.cart.length === 0) {
-      alert("Please add at least one item to the cart.");
+    this.errorMessage = '';
+    this.successMessage = '';
 
-      return;
-    }
+    const validations = [
+      {
+        invalid: this.cart.length === 0,
+        message: 'Please add at least one item to the cart.',
+      },
+      {
+        invalid: !this.customerName.trim(),
+        message: 'Please enter customer name.',
+      },
+      {
+        invalid: !this.customerPhone.trim(),
+        message: 'Please enter customer phone number.',
+      },
+      {
+        invalid: !this.customerEmail.trim(),
+        message: 'Please enter customer email.',
+      },
+    ];
 
-    if (!this.customerName.trim()) {
-      alert("Please enter customer name.");
+    const error = validations.find((v) => v.invalid);
 
-      return;
-    }
-
-    if (!this.customerPhone.trim()) {
-      alert("Please enter customer phone number.");
-
-      return;
-    }
-
-    if (!this.customerEmail.trim()) {
-      alert("Please enter customer email.");
-
+    if (error) {
+      this.errorMessage = error.message;
       return;
     }
 
@@ -256,7 +250,6 @@ export class Dashboard implements OnInit {
 
       items: this.cart.map((line) => ({
         item: line.item,
-
         quantity: line.quantity,
       })),
 
@@ -267,32 +260,25 @@ export class Dashboard implements OnInit {
 
     this.orders.push(newOrder);
 
-    console.log("New Order:", newOrder);
+    console.log('New Order:', newOrder);
+    console.log('All Orders:', this.orders);
 
-    console.log("All Orders:", this.orders);
-
-    alert(
-      `Order placed successfully!\n\n` +
-        `Customer: ${newOrder.customerName}\n` +
-        `Phone: ${newOrder.customerPhone}\n` +
-        `Total: ${newOrder.total.toFixed(2)}`,
-    );
+    this.successMessage =
+      `Order placed successfully! Customer: ${newOrder.customerName}, ` +
+      `Phone: ${newOrder.customerPhone}, ` +
+      `Total: ${newOrder.total.toFixed(2)}`;
 
     this.cart = [];
-
-    this.customerName = "";
-
-    this.customerPhone = "";
-
-    this.customerEmail = "";
-
-    this.orderType = "dine-in";
+    this.customerName = '';
+    this.customerPhone = '';
+    this.customerEmail = '';
+    this.orderType = 'dine-in';
   }
 
   logout(): void {
     localStorage.clear();
 
-    this.router.navigate(["/login"]);
+    this.router.navigate(['/login']);
   }
 
   toggleSidebar(): void {
