@@ -6,30 +6,19 @@ import { FormsModule } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmSidebarImports } from '@spartan-ng/helm/sidebar';
 import { HlmTableImports } from '@spartan-ng/helm/table';
-
 import { lucideHouse, lucideInbox, lucideSettings } from '@ng-icons/lucide';
-
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { HlmAlertImports } from '@spartan-ng/helm/alert';
-
 import { lucideAlertTriangle } from '@ng-icons/lucide';
+import { MenuService, MenuItem } from '../services/menu.service';
 
 interface NavItem {
   id: string;
   label: string;
   adminOnly: boolean;
-}
-
-interface MenuItem {
-  id: number;
-  name: string;
-  category: string;
-  image: string;
-  price: number;
 }
 
 interface CartLine {
@@ -51,7 +40,15 @@ interface Order {
 @Component({
   selector: 'app-dashboard',
 
-  imports: [CommonModule, FormsModule, HlmSidebarImports, HlmButtonImports, HlmTableImports,HlmAlertImports, NgIcon],
+  imports: [
+    CommonModule,
+    FormsModule,
+    HlmSidebarImports,
+    HlmButtonImports,
+    HlmTableImports,
+    HlmAlertImports,
+    NgIcon,
+  ],
 
   templateUrl: './dashboard.html',
 
@@ -114,6 +111,7 @@ export class Dashboard implements OnInit {
   constructor(
     private http: HttpClient,
     private router: Router,
+    private menuService: MenuService,
   ) {
     if (typeof window !== 'undefined') {
       const admin = window.localStorage.getItem('admin');
@@ -135,7 +133,7 @@ export class Dashboard implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getMenuItems().subscribe({
+    this.menuService.getMenuItems().subscribe({
       next: (items) => {
         console.log('API DATA:', items);
 
