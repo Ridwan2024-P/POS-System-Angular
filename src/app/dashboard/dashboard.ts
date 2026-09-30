@@ -110,10 +110,9 @@ export class Dashboard implements OnInit {
   sidebarOpen = false;
 
   constructor(
-    private http: HttpClient,
     private router: Router,
     private menuService: MenuService,
-     private cdr: ChangeDetectorRef,
+    private cdr: ChangeDetectorRef,
   ) {
     if (typeof window !== 'undefined') {
       const admin = window.localStorage.getItem('admin');
@@ -129,11 +128,6 @@ export class Dashboard implements OnInit {
       }
     }
   }
-
-  getMenuItems(): Observable<MenuItem[]> {
-    return this.http.get<MenuItem[]>('/menu.json');
-  }
-
   ngOnInit(): void {
     this.menuService.getMenuItems().subscribe({
       next: (items) => {
@@ -147,13 +141,12 @@ export class Dashboard implements OnInit {
         console.log('FILTERED:', this.filteredMenuItems);
 
         this.loading = false;
-         this.cdr.detectChanges();
+        this.cdr.detectChanges();
       },
 
       error: (error) => {
         console.error('MENU ERROR:', error);
         this.loading = false;
-       
       },
     });
   }
