@@ -18,6 +18,7 @@ import { ChangeDetectorRef } from '@angular/core';
 
 import { HlmSwitch } from '@spartan-ng/helm/switch';
 import { HlmLabel } from '@spartan-ng/helm/label';
+import { Bill } from '../bill/bill';
 
 
 interface NavItem {
@@ -53,8 +54,9 @@ interface Order {
     HlmTableImports,
     HlmAlertImports,
     NgIcon,
-    HlmLabel, HlmSwitch
-  ],
+    HlmLabel, HlmSwitch,
+    Bill
+],
 
   templateUrl: './dashboard.html',
 
