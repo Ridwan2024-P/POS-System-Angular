@@ -1,0 +1,411 @@
+<div hlmSidebarWrapper class="min-h-screen">
+  <hlm-sidebar>
+    <div hlmSidebarContent>
+      <div hlmSidebarGroup class="h-full flex flex-col">
+        <div
+          hlmSidebarGroupLabel
+          class="w-full mb-5 px-2 text-lg font-bold tracking-wide text-gray-800"
+        >
+          POS
+        </div>
+
+        <div hlmSidebarGroupContent class="flex flex-1 flex-col">
+          <ul hlmSidebarMenu class="flex flex-col gap-2">
+            <li hlmSidebarMenuItem *ngFor="let item of visibleNavItems">
+              <button
+                type="button"
+                class="w-full rounded-xl px-4 py-2 mb-2 text-sm font-medium text-gray-700 bg-gray-100 transition-all duration-200 hover:bg-gray-200 hover:text-gray-900 active:scale-[0.98] flex items-center justify-center"
+                [class.bg-gray-900]="activeView === item.id"
+                [class.text-white]="activeView === item.id"
+                (click)="selectNav(item.id)"
+              >
+                <span>{{ item.label }}</span>
+              </button>
+            </li>
+          </ul>
+
+          <div class="mt-auto pt-5">
+            <button
+              type="button"
+              class="w-full rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-600 transition-all duration-200 hover:border-red-200 hover:bg-red-50 hover:text-red-600 active:scale-[0.98] flex items-center justify-center"
+              (click)="logout()"
+            >
+              <span>Logout</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </hlm-sidebar>
+
+  <main class="flex-1 p-6">
+    <button hlmSidebarTrigger></button>
+    <div *ngIf="activeView === 'POS'">
+      <div class="container">
+        <div
+          class="left rounded-2xl p-5 border border-gray-100 max-h-[100vh] overflow-y-auto pr-2 scrollbar-thin"
+        >
+          <div class="w-full">
+            <div
+              class="flex w-full items-center rounded-full border border-gray-200 bg-gray-100 px-4 py-2 mb-5"
+            >
+              <span class="mr-2 text-xl text-gray-500">⌕</span>
+
+              <input
+                type="text"
+                placeholder="Search food..."
+                [(ngModel)]="searchText"
+                class="min-w-0 flex-1 bg-transparent outline-none"
+              />
+            </div>
+          </div>
+
+          <div class="flex flex-wrap gap-3 mb-6">
+            <button
+              *ngFor="let cat of categories"
+              type="button"
+              class="rounded-full border border-gray-200 bg-white px-5 py-2 text-sm font-medium text-gray-600 transition-all duration-200 hover:bg-black hover:text-white hover:border-black"
+              [class.bg-black]="selectedCategory === cat"
+              [class.border-gray-900]="selectedCategory === cat"
+              (click)="selectedCategory = cat"
+            >
+              {{ cat }}
+            </button>
+          </div>
+
+          <div
+            *ngIf="filteredMenuItems.length === 0"
+            class="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4"
+          >
+            <div
+              *ngFor="let skeleton of [1, 2, 3, 4, 5, 6, 7, 8]"
+              class="rounded-2xl border border-gray-200 bg-white p-4"
+            >
+              <div
+                class="mb-3 h-28 w-full animate-pulse rounded-xl bg-gray-200"
+              ></div>
+
+              <div
+                class="mb-2 h-4 w-3/4 animate-pulse rounded bg-gray-200"
+              ></div>
+
+              <div class="h-5 w-1/3 animate-pulse rounded bg-gray-200"></div>
+            </div>
+          </div>
+
+          <div
+            *ngIf="filteredMenuItems.length > 0"
+            class="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4"
+          >
+            <button
+              *ngFor="let item of filteredMenuItems"
+              type="button"
+              (click)="addToCart(item)"
+              class="group rounded-2xl border border-gray-200 bg-white p-4 text-left duration-200 hover:border-gray-300 hover:shadow-lg"
+            >
+              <div
+                class="mb-3 flex h-28 w-full items-center justify-center overflow-hidden rounded-xl bg-gray-100 text-3xl font-bold text-gray-500 transition group-hover:bg-gray-900 group-hover:text-white"
+              >
+                <img
+                  [src]="item.image"
+                  [alt]="item.name"
+                  class="h-28 w-full rounded-xl object-cover"
+                />
+              </div>
+
+              <div class="mb-1 truncate text-sm font-semibold text-gray-900">
+                {{ item.name }}
+              </div>
+
+              <div class="text-base font-bold text-gray-700">
+                ৳ {{ item.price.toFixed(2) }}
+              </div>
+            </button>
+          </div>
+        </div>
+
+        <div class="right">
+          <div class="customer-details">
+            <form
+              class="w-full rounded-2xl border border-gray-200 bg-white p-5"
+            >
+              <h3 class="mb-5 text-lg font-bold text-gray-900">Customer</h3>
+
+              <div>
+                <div>
+                  <label class="mb-1.5 block text-sm font-medium text-gray-700">
+                    Name
+                  </label>
+
+                  <input
+                    type="text"
+                    [(ngModel)]="customerName"
+                    name="customerName"
+                    placeholder="Customer name"
+                    class="w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm outline-none transition focus:border-gray-900 focus:bg-white"
+                  />
+                </div>
+
+                <div class="mt-4">
+                  <label class="mb-1.5 block text-sm font-medium text-gray-700">
+                    Phone
+                  </label>
+
+                  <input
+                    type="text"
+                    [(ngModel)]="customerPhone"
+                    name="customerPhone"
+                    placeholder="Phone number"
+                    class="w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm outline-none transition focus:border-gray-900 focus:bg-white"
+                  />
+                </div>
+
+                <div class="mt-4">
+                  <label class="mb-1.5 block text-sm font-medium text-gray-700">
+                    Email
+                  </label>
+
+                  <input
+                    type="email"
+                    [(ngModel)]="customerEmail"
+                    name="customerEmail"
+                    placeholder="Email address"
+                    class="w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm outline-none transition focus:border-gray-900 focus:bg-white"
+                  />
+                </div>
+
+                <div class="grid grid-cols-2 gap-2 pt-4">
+                  <button
+                    type="button"
+                    class="rounded-lg border px-4 py-2.5 text-sm font-medium transition"
+                    [class.bg-gray-900]="orderType === 'dine-in'"
+                    [class.text-white]="orderType === 'dine-in'"
+                    [class.border-gray-900]="orderType === 'dine-in'"
+                    [class.bg-gray-50]="orderType !== 'dine-in'"
+                    [class.text-gray-700]="orderType !== 'dine-in'"
+                    (click)="orderType = 'dine-in'"
+                  >
+                    Dine-in
+                  </button>
+
+                  <button
+                    type="button"
+                    class="rounded-lg border px-4 py-2.5 text-sm font-medium transition"
+                    [class.bg-gray-900]="orderType === 'parcel'"
+                    [class.text-white]="orderType === 'parcel'"
+                    [class.border-gray-900]="orderType === 'parcel'"
+                    [class.bg-gray-50]="orderType !== 'parcel'"
+                    [class.text-gray-700]="orderType !== 'parcel'"
+                    (click)="orderType = 'parcel'"
+                  >
+                    Parcel
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+
+          <div class="foot-cart shrink-0 mt-5">
+            <div
+              class="w-full rounded-2xl border border-gray-200 bg-white p-5 max-h-[30vh] overflow-y-auto pr-2 scrollbar-thin"
+            >
+              <div class="mb-5 flex items-center justify-between">
+                <h3 class="text-lg font-bold text-gray-900">Food Cart</h3>
+
+                <span
+                  *ngIf="cart.length > 0"
+                  class="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-600"
+                >
+                  {{ cart.length }} items
+                </span>
+              </div>
+
+              <p
+                *ngIf="cart.length === 0"
+                class="rounded-xl bg-gray-50 py-10 text-center text-sm text-gray-400"
+              >
+                Tap a menu item to add it here.
+              </p>
+
+              <div
+                *ngFor="let line of cart"
+                class="flex items-center gap-3 border-b border-gray-100 py-3 last:border-0"
+              >
+                <div class="min-w-0 flex-1">
+                  <p class="truncate text-sm font-semibold text-gray-900">
+                    {{ line.item.name }}
+                  </p>
+
+                  <p class="mt-1 text-xs text-gray-400">
+                    ৳ {{ line.item.price.toFixed(2) }}
+                  </p>
+                </div>
+
+                <div
+                  class="flex items-center rounded-lg border border-gray-200"
+                >
+                  <button
+                    type="button"
+                    (click)="decreaseQty(line)"
+                    class="flex h-8 w-8 items-center justify-center text-lg text-gray-600 transition hover:bg-gray-100"
+                  >
+                    −
+                  </button>
+
+                  <span class="w-8 text-center text-sm font-semibold">
+                    {{ line.quantity }}
+                  </span>
+
+                  <button
+                    type="button"
+                    (click)="increaseQty(line)"
+                    class="flex h-8 w-8 items-center justify-center text-lg text-gray-600 transition hover:bg-gray-100"
+                  >
+                    +
+                  </button>
+                </div>
+
+                <div class="w-20 text-right text-sm font-bold text-gray-900">
+                  ৳ {{ (line.item.price * line.quantity).toFixed(2) }}
+                </div>
+              </div>
+            </div>
+
+            <div class="bill-details mt-5">
+              <div
+                class="w-full rounded-2xl border border-gray-200 bg-white p-5"
+              >
+                <h3 class="mb-5 text-lg font-bold text-gray-900">Bill</h3>
+
+                <div class="space-y-3">
+                  <div
+                    class="flex items-center justify-between text-sm text-gray-500"
+                  >
+                    <span>Subtotal</span>
+
+                    <span> ৳ {{ cartTotal.toFixed(2) }} </span>
+                  </div>
+
+                  <div class="border-t border-gray-100 pt-4">
+                    <div class="flex items-center justify-between">
+                      <span class="text-base font-semibold text-gray-900">
+                        Total
+                      </span>
+
+                      <span class="text-xl font-bold text-gray-900">
+                        ৳ {{ cartTotal.toFixed(2) }}
+                      </span>
+                    </div>
+                  </div>
+
+                  <button
+                    type="button"
+                    [disabled]="cart.length === 0"
+                    (click)="checkout()"
+                    class="mt-4 w-full rounded-xl bg-gray-900 px-5 py-3 font-semibold text-white transition hover:bg-black disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-400"
+                  >
+                    Checkout
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="activeView === 'orders'" class="w-full">
+      <div class="mb-6 flex items-center justify-between">
+        <div>
+          <h2 class="text-2xl font-bold text-gray-900">Orders</h2>
+
+          <p class="mt-1 text-sm text-gray-500">View all completed orders.</p>
+        </div>
+      </div>
+
+      <div
+        *ngIf="orders.length === 0"
+        class="flex min-h-[250px] flex-col items-center justify-center rounded-xl border bg-white p-8 text-center"
+      >
+        <h3 class="text-lg font-semibold text-gray-900">No orders yet</h3>
+
+        <p class="mt-2 text-sm text-gray-500">
+          Orders will appear here after checkout.
+        </p>
+      </div>
+
+      <div
+        *ngIf="orders.length > 0"
+        hlmTableContainer
+        class="w-full overflow-x-auto rounded-xl border bg-white"
+      >
+        <table hlmTable class="min-w-[1100px]">
+          <thead hlmTableHeader>
+            <tr hlmTableRow>
+              <th hlmTableHead>Order ID</th>
+              <th hlmTableHead>Date</th>
+              <th hlmTableHead>Customer</th>
+              <th hlmTableHead>Phone</th>
+              <th hlmTableHead>Email</th>
+              <th hlmTableHead>Type</th>
+              <th hlmTableHead>Items</th>
+
+              <th hlmTableHead class="text-right">Total</th>
+            </tr>
+          </thead>
+
+          <tbody hlmTableBody>
+            <tr hlmTableRow *ngFor="let order of orders">
+              <td hlmTableCell class="font-semibold">#{{ order.id }}</td>
+
+              <td hlmTableCell>{{ order.date | date:'medium' }}</td>
+
+              <td hlmTableCell>{{ order.customerName }}</td>
+
+              <td hlmTableCell>{{ order.customerPhone }}</td>
+
+              <td hlmTableCell>{{ order.customerEmail }}</td>
+
+              <td hlmTableCell>
+                <span
+                  class="inline-flex rounded-full px-3 py-1 text-xs font-semibold"
+                  [ngClass]="{
+                    'bg-blue-100 text-blue-700':
+                      order.orderType === 'dine-in',
+                    'bg-orange-100 text-orange-700':
+                      order.orderType === 'parcel'
+                  }"
+                >
+                  {{ order.orderType === 'dine-in' ? 'Dine-in' : 'Parcel' }}
+                </span>
+              </td>
+
+              <td hlmTableCell>
+                <div class="flex flex-col gap-1">
+                  <div
+                    *ngFor="let line of order.items"
+                    class="flex items-center gap-2"
+                  >
+                    <span class="font-medium text-gray-700">
+                      {{ line.item.name }}
+                    </span>
+
+                    <span class="text-sm text-gray-500">
+                      × {{ line.quantity }}
+                    </span>
+                  </div>
+                </div>
+              </td>
+
+              <td hlmTableCell class="text-right">
+                <strong class="font-semibold text-gray-900">
+                  ৳ {{ order.total.toFixed(2) }}
+                </strong>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>

@@ -1,0 +1,88 @@
+.container {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(320px, 1fr);
+  gap: 20px;
+  width: 100%;
+  height: calc(100vh - 48px);
+  min-width: 0;
+  min-height: 0;
+}
+
+.left {
+  min-width: 0;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.right {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: 20px;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.customer-details,
+.foot-cart,
+.bill-details {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.foot-cart {
+  min-height: 0;
+}
+
+@media (max-width: 1024px) {
+  .container {
+    grid-template-columns: 1fr;
+    height: auto;
+    min-height: calc(100vh - 48px);
+    gap: 15px;
+  }
+
+  .right {
+    grid-template-rows: auto auto auto;
+    gap: 15px;
+    overflow: visible;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    grid-template-columns: 1fr;
+    height: auto;
+    min-height: 0;
+    gap: 15px;
+  }
+
+  .left {
+    overflow-y: visible;
+    overflow-x: hidden;
+  }
+
+  .right {
+    grid-template-rows: auto auto auto;
+    gap: 15px;
+    overflow: visible;
+  }
+
+  .customer-details,
+  .foot-cart,
+  .bill-details {
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    gap: 12px;
+  }
+
+  .right {
+    gap: 12px;
+  }
+}

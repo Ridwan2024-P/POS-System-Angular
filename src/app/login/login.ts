@@ -1,0 +1,59 @@
+import { Component } from '@angular/core';
+import { HlmButtonImports } from '@spartan-ng/helm/button';
+import { HlmCardImports } from '@spartan-ng/helm/card';
+import { HlmInputImports } from '@spartan-ng/helm/input';
+import { HlmLabelImports } from '@spartan-ng/helm/label';
+import { HttpClient } from '@angular/common/http';
+import { FormControl, FormGroup, FormGroupDirective, FormsModule, NgForm, ReactiveFormsModule, Validators } from '@angular/forms';
+import { RouterLink,Router } from '@angular/router';
+@Component({
+  imports: [HlmCardImports, HlmLabelImports, HlmInputImports, HlmButtonImports,FormsModule,ReactiveFormsModule],
+  host: { class: 'w-full max-w-md' },
+  selector: 'app-login',
+  styleUrl: './login.css',
+  templateUrl: './login.html',
+})
+export class Login {
+
+   constructor(private router:Router, private http : HttpClient){}
+   loginForm =  new FormGroup({
+    email:new FormControl('',[
+      Validators.required,Validators.email
+    ]),
+    password: new FormControl('')
+
+  })
+  // matcher = new MyErrorStateMatcher();
+  
+    errorMessage: string = '';
+  onSubmit() {
+   
+    const { email, password } = this.loginForm.value;
+
+    this.http.get<any[]>('/login.json').subscribe(users => {
+      const admin = users.find(u => u.email===email && u.password === password && u.role === "admin");
+       const  employee = users.find(u => u.email===email && u.password === password && u.role === "employee");
+        localStorage.removeItem('admin');
+  localStorage.removeItem('employee');
+      
+     if (admin) {
+  const { password, ...adminData } = admin;
+
+  localStorage.setItem('admin', JSON.stringify(adminData));
+
+  this.router.navigate(['/dashboard']);
+}
+else if (employee) {
+  const { password, ...employeeData } = employee;
+
+  localStorage.setItem('employee', JSON.stringify(employeeData));
+
+  this.router.navigate(['/dashboard']);
+} else {
+      
+        alert(  this.errorMessage = 'Invalid email or password')
+       
+      }
+    });
+  }
+}
