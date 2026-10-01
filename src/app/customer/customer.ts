@@ -31,6 +31,12 @@ export class Customer {
 
   @Output() customerChange = new EventEmitter<CustomerData>();
 
+  isValidEmail(email: string): boolean {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
+  }
+  isValidPhone(phone: string): boolean {
+    return /^01[3-9]\d{8}$/.test(phone.trim());
+  }
   onCustomerChange(): void {
     this.customerChange.emit({
       customerName: this.customerName,

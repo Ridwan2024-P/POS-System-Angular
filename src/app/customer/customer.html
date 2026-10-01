@@ -37,20 +37,28 @@
       <label class="mb-1.5 block text-sm font-medium text-gray-700"> Phone </label>
 
       <input
-        type="text"
+        type="tel"
         [(ngModel)]="customerPhone"
         (ngModelChange)="onCustomerChange()"
         [ngClass]="{
-          'border-red-500': submitted && !customerPhone.trim(),
-          'border-gray-200': !(submitted && !customerPhone.trim()),
+          'border-red-500': submitted && (!customerPhone.trim() || !isValidPhone(customerPhone)),
+          'border-gray-200': !(
+            submitted &&
+            (!customerPhone.trim() || !isValidPhone(customerPhone))
+          ),
         }"
+        autocomplete="tel"
         name="customerPhone"
         placeholder="Phone number"
         class="w-full rounded-lg border bg-gray-50 px-3 py-2.5 text-sm outline-none transition focus:border-gray-900 focus:bg-white"
       />
 
       @if (submitted && !customerPhone.trim()) {
-        <p class="mt-1 text-xs text-red-600">Phone number required.</p>
+        <p class="mt-1 text-xs text-red-600">Phone number is required.</p>
+      }
+
+      @if (submitted && customerPhone.trim() && !isValidPhone(customerPhone)) {
+        <p class="mt-1 text-xs text-red-600">Please enter a valid Bangladesh phone number.</p>
       }
     </div>
 
@@ -62,8 +70,11 @@
         [(ngModel)]="customerEmail"
         (ngModelChange)="onCustomerChange()"
         [ngClass]="{
-          'border-red-500': submitted && !customerEmail.trim(),
-          'border-gray-200': !(submitted && !customerEmail.trim()),
+          'border-red-500': submitted && (!customerEmail.trim() || !isValidEmail(customerEmail)),
+          'border-gray-200': !(
+            submitted &&
+            (!customerEmail.trim() || !isValidEmail(customerEmail))
+          ),
         }"
         name="customerEmail"
         placeholder="Email address"
@@ -72,6 +83,10 @@
 
       @if (submitted && !customerEmail.trim()) {
         <p class="mt-1 text-xs text-red-600">Email address is required.</p>
+      }
+
+      @if (submitted && customerEmail.trim() && !isValidEmail(customerEmail)) {
+        <p class="mt-1 text-xs text-red-600">Please enter a valid email address.</p>
       }
     </div>
     <div class="mt-2 grid grid-cols-1 gap-2 pt-4">
@@ -97,10 +112,16 @@
           </div>
         </div>
 
-        <hlm-switch
-          [checked]="orderType === 'parcel'"
-          (checkedChange)="onOrderTypeChange($event)"
-        />
+        <div class="flex items-center gap-2">
+          <span class="text-xs font-medium text-gray-500"> Dine-in </span>
+
+          <hlm-switch
+            [checked]="orderType === 'parcel'"
+            (checkedChange)="onOrderTypeChange($event)"
+          />
+
+          <span class="text-xs font-medium text-gray-500"> Parcel </span>
+        </div>
       </label>
     </div>
   </div>

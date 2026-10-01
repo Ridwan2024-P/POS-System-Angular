@@ -17,7 +17,6 @@ import { Sidebar } from '../sidebar/sidebar';
 import { Menu } from '../menu/menu';
 import { Order, Orders } from '../orders/orders';
 
-
 @Component({
   selector: 'app-dashboard',
 
@@ -33,8 +32,8 @@ import { Order, Orders } from '../orders/orders';
     Customer,
     Sidebar,
     Menu,
-    Orders
-],
+    Orders,
+  ],
 
   templateUrl: './dashboard.html',
 
@@ -151,12 +150,14 @@ export class Dashboard implements OnInit {
         message: 'Please enter customer name.',
       },
       {
-        invalid: !this.customerPhone.trim(),
-        message: 'Please enter customer phone number.',
+        invalid: !/^01[3-9]\d{8}$/.test(this.customerPhone.trim()),
+        message: 'Please enter a valid Bangladesh phone number.',
       },
       {
-        invalid: !this.customerEmail.trim(),
-        message: 'Please enter customer email.',
+        invalid:
+          !this.customerEmail.trim() ||
+          !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.customerEmail.trim()),
+        message: 'Please enter a valid email address.',
       },
     ];
 
