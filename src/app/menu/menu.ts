@@ -18,6 +18,7 @@ export class Menu {
 
   selectedCategory = 'All';
   searchText = '';
+  isLoading = true;
 
   get filteredMenuItems(): MenuItem[] {
     return this.menuItems.filter((item) => {
@@ -27,9 +28,14 @@ export class Menu {
       const searchMatch = item.name.toLowerCase().includes(this.searchText.toLowerCase());
 
       return categoryMatch && searchMatch;
+
     });
   }
-
+ ngOnChanges(): void {
+    if (this.menuItems.length > 0) {
+      this.isLoading = false;
+    }
+  }
   addToCart(item: MenuItem): void {
     this.itemSelected.emit(item);
   }
