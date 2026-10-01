@@ -45,14 +45,15 @@
 
           <div class="foot-cart shrink-0 mt-5">
             <app-cart [cart]="cart" (cartChange)="cart = $event"></app-cart>
-          </div>
-          <app-bill
+            <app-bill
             [cartTotal]="cartTotal"
             [cartLength]="cart.length"
             [errorMessage]="errorMessage"
             [successMessage]="successMessage"
             (checkoutClicked)="checkout()"
           ></app-bill>
+          </div>
+          
         </div>
       </div>
     </div>
