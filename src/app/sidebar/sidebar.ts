@@ -37,8 +37,17 @@ export class Sidebar {
   ];
 
   visibleNavItems: NavItem[] = [];
+
   constructor(private router: Router) {
-    this.visibleNavItems = this.allNavItems;
+    const role = localStorage.getItem('role');
+
+    this.visibleNavItems = this.allNavItems.filter((item) => {
+      if (item.adminOnly) {
+        return role === 'admin';
+      }
+
+      return true;
+    });
   }
 
   selectNav(id: string): void {
