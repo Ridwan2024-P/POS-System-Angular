@@ -10,24 +10,13 @@ import { NgIcon, provideIcons } from '@ng-icons/core';
 import { HlmAlertImports } from '@spartan-ng/helm/alert';
 import { MenuService, MenuItem } from '../services/menu.service';
 import { ChangeDetectorRef } from '@angular/core';
-import { HlmSwitch } from '@spartan-ng/helm/switch';
-import { HlmLabel } from '@spartan-ng/helm/label';
 import { Bill } from '../bill/bill';
 import { Cart, CartLine } from '../cart/cart';
 import { Customer, CustomerData } from '../customer/customer';
 import { Sidebar } from '../sidebar/sidebar';
 import { Menu } from '../menu/menu';
+import { Order, Orders } from '../orders/orders';
 
-interface Order {
-  id: number;
-  customerName: string;
-  customerPhone: string;
-  customerEmail: string;
-  orderType: 'dine-in' | 'parcel';
-  items: CartLine[];
-  total: number;
-  date: string;
-}
 
 @Component({
   selector: 'app-dashboard',
@@ -39,15 +28,13 @@ interface Order {
     HlmButtonImports,
     HlmTableImports,
     HlmAlertImports,
-    NgIcon,
-    HlmLabel,
-    HlmSwitch,
     Bill,
     Cart,
     Customer,
     Sidebar,
     Menu,
-  ],
+    Orders
+],
 
   templateUrl: './dashboard.html',
 
