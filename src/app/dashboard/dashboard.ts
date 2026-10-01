@@ -16,6 +16,7 @@ import { Bill } from '../bill/bill';
 import { Cart, CartLine } from '../cart/cart';
 import { Customer, CustomerData } from '../customer/customer';
 import { Sidebar } from '../sidebar/sidebar';
+import { Menu } from '../menu/menu';
 
 interface Order {
   id: number;
@@ -45,6 +46,7 @@ interface Order {
     Cart,
     Customer,
     Sidebar,
+    Menu,
   ],
 
   templateUrl: './dashboard.html',
@@ -65,10 +67,6 @@ export class Dashboard implements OnInit {
   menuItems: MenuItem[] = [];
 
   categories: string[] = [];
-
-  selectedCategory = 'All';
-
-  searchText = '';
 
   loading = true;
 
@@ -98,11 +96,11 @@ export class Dashboard implements OnInit {
     this.activeView = id;
   }
   onCustomerChange(data: CustomerData): void {
-  this.customerName = data.customerName;
-  this.customerPhone = data.customerPhone;
-  this.customerEmail = data.customerEmail;
-  this.orderType = data.orderType;
-}
+    this.customerName = data.customerName;
+    this.customerPhone = data.customerPhone;
+    this.customerEmail = data.customerEmail;
+    this.orderType = data.orderType;
+  }
   ngOnInit(): void {
     this.menuService.getMenuItems().subscribe({
       next: (items) => {
@@ -113,7 +111,6 @@ export class Dashboard implements OnInit {
         this.categories = ['All', ...Array.from(new Set(items.map((item) => item.category)))];
 
         console.log('MENU ITEMS:', this.menuItems);
-        console.log('FILTERED:', this.filteredMenuItems);
 
         this.loading = false;
         this.cdr.detectChanges();
@@ -123,17 +120,6 @@ export class Dashboard implements OnInit {
         console.error('MENU ERROR:', error);
         this.loading = false;
       },
-    });
-  }
-
-  get filteredMenuItems(): MenuItem[] {
-    return this.menuItems.filter((item) => {
-      const categoryMatch =
-        this.selectedCategory === 'All' || item.category === this.selectedCategory;
-
-      const searchMatch = item.name.toLowerCase().includes(this.searchText.toLowerCase());
-
-      return categoryMatch && searchMatch;
     });
   }
 
