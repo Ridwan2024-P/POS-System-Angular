@@ -72,12 +72,14 @@ export class Login {
         const { password, ...adminData } = admin;
 
         localStorage.setItem('admin', JSON.stringify(adminData));
+        localStorage.setItem('role', admin.role);
 
         this.router.navigate(['/dashboard']);
       } else if (employee) {
         const { password, ...employeeData } = employee;
 
         localStorage.setItem('employee', JSON.stringify(employeeData));
+        localStorage.setItem('role', employee.role);
 
         this.router.navigate(['/dashboard']);
       } else {
