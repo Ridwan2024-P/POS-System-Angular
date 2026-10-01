@@ -1,0 +1,38 @@
+<hlm-sidebar>
+  <div hlmSidebarContent>
+    <div hlmSidebarGroup class="h-full flex flex-col">
+      <div
+        hlmSidebarGroupLabel
+        class="w-full mb-5 px-2 text-lg font-bold tracking-wide text-gray-800"
+      >
+        POS
+      </div>
+
+      <div hlmSidebarGroupContent class="flex flex-1 flex-col">
+        <ul hlmSidebarMenu class="flex flex-col gap-2">
+          <li hlmSidebarMenuItem *ngFor="let item of visibleNavItems">
+            <button
+              type="button"
+              class="w-full rounded-xl cursor-pointer px-4 py-2 mb-2 text-sm font-medium text-gray-700 bg-gray-100 transition-all duration-200 hover:bg-gray-200 hover:text-gray-900 active:scale-[0.98] flex items-center justify-center"
+              [class.bg-gray-900]="activeView === item.id"
+              [class.text-white]="activeView === item.id"
+              (click)="selectNav(item.id)"
+            >
+              <span>{{ item.label }}</span>
+            </button>
+          </li>
+        </ul>
+
+        <div class="mt-auto pt-5">
+          <button
+            type="button"
+            class="w-full rounded-xl border cursor-pointer border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-600 transition-all duration-200 hover:border-red-200 hover:bg-red-50 hover:text-red-600 active:scale-[0.98] flex items-center justify-center"
+            (click)="logout()"
+          >
+            <span>Logout</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</hlm-sidebar>

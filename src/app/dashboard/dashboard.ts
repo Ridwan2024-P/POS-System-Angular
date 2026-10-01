@@ -1,10 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
-import { Observable } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmSidebarImports } from '@spartan-ng/helm/sidebar';
@@ -12,21 +8,16 @@ import { HlmTableImports } from '@spartan-ng/helm/table';
 import { lucideHouse, lucideInbox, lucideSettings } from '@ng-icons/lucide';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { HlmAlertImports } from '@spartan-ng/helm/alert';
-import { lucideAlertTriangle } from '@ng-icons/lucide';
 import { MenuService, MenuItem } from '../services/menu.service';
 import { ChangeDetectorRef } from '@angular/core';
-
 import { HlmSwitch } from '@spartan-ng/helm/switch';
 import { HlmLabel } from '@spartan-ng/helm/label';
 import { Bill } from '../bill/bill';
 import { Cart } from '../cart/cart';
+import { Customer } from '../customer/customer';
+import { Sidebar } from '../sidebar/sidebar';
 
 
-interface NavItem {
-  id: string;
-  label: string;
-  adminOnly: boolean;
-}
 
 interface CartLine {
   item: MenuItem;
@@ -57,7 +48,9 @@ interface Order {
     NgIcon,
     HlmLabel, HlmSwitch,
     Bill,
-    Cart
+    Cart,
+    Customer,
+    Sidebar
 ],
 
   templateUrl: './dashboard.html',
@@ -73,21 +66,8 @@ interface Order {
   ],
 })
 export class Dashboard implements OnInit {
-  allNavItems: NavItem[] = [
-    {
-      id: 'POS',
-      label: 'POS',
-      adminOnly: false,
-    },
-
-    {
-      id: 'orders',
-      label: 'Orders',
-      adminOnly: true,
-    },
-  ];
-
-  visibleNavItems: NavItem[] = [];
+ 
+  
 
   activeView = 'POS';
 
@@ -116,7 +96,6 @@ export class Dashboard implements OnInit {
 
   orders: Order[] = [];
 
-  sidebarOpen = false;
 
   submitted = false;
 
@@ -124,21 +103,10 @@ export class Dashboard implements OnInit {
     private router: Router,
     private menuService: MenuService,
     private cdr: ChangeDetectorRef,
-  ) {
-    if (typeof window !== 'undefined') {
-      const admin = window.localStorage.getItem('admin');
-
-      const employee = window.localStorage.getItem('employee');
-
-      if (admin) {
-        this.visibleNavItems = this.allNavItems;
-      } else if (employee) {
-        this.visibleNavItems = this.allNavItems.filter((item) => item.id !== 'orders');
-      } else {
-        this.visibleNavItems = this.allNavItems.filter((item) => !item.adminOnly);
-      }
-    }
-  }
+  ) {}
+  selectNav(id: string): void {
+  this.activeView = id;
+}
   ngOnInit(): void {
     this.menuService.getMenuItems().subscribe({
       next: (items) => {
@@ -162,11 +130,6 @@ export class Dashboard implements OnInit {
     });
   }
 
-  selectNav(id: string): void {
-    this.activeView = id;
-
-    this.sidebarOpen = false;
-  }
 
   get filteredMenuItems(): MenuItem[] {
     return this.menuItems.filter((item) => {
@@ -287,9 +250,5 @@ export class Dashboard implements OnInit {
     localStorage.clear();
 
     this.router.navigate(['/login']);
-  }
-
-  toggleSidebar(): void {
-    this.sidebarOpen = !this.sidebarOpen;
   }
 }
