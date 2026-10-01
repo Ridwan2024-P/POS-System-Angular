@@ -14,7 +14,7 @@ import { HlmSwitch } from '@spartan-ng/helm/switch';
 import { HlmLabel } from '@spartan-ng/helm/label';
 import { Bill } from '../bill/bill';
 import { Cart, CartLine } from '../cart/cart';
-import { Customer } from '../customer/customer';
+import { Customer, CustomerData } from '../customer/customer';
 import { Sidebar } from '../sidebar/sidebar';
 
 interface Order {
@@ -97,6 +97,12 @@ export class Dashboard implements OnInit {
   selectNav(id: string): void {
     this.activeView = id;
   }
+  onCustomerChange(data: CustomerData): void {
+  this.customerName = data.customerName;
+  this.customerPhone = data.customerPhone;
+  this.customerEmail = data.customerEmail;
+  this.orderType = data.orderType;
+}
   ngOnInit(): void {
     this.menuService.getMenuItems().subscribe({
       next: (items) => {
