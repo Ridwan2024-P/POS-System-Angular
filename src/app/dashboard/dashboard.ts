@@ -13,16 +13,9 @@ import { ChangeDetectorRef } from '@angular/core';
 import { HlmSwitch } from '@spartan-ng/helm/switch';
 import { HlmLabel } from '@spartan-ng/helm/label';
 import { Bill } from '../bill/bill';
-import { Cart } from '../cart/cart';
+import { Cart, CartLine } from '../cart/cart';
 import { Customer } from '../customer/customer';
 import { Sidebar } from '../sidebar/sidebar';
-
-
-
-interface CartLine {
-  item: MenuItem;
-  quantity: number;
-}
 
 interface Order {
   id: number;
@@ -46,12 +39,13 @@ interface Order {
     HlmTableImports,
     HlmAlertImports,
     NgIcon,
-    HlmLabel, HlmSwitch,
+    HlmLabel,
+    HlmSwitch,
     Bill,
     Cart,
     Customer,
-    Sidebar
-],
+    Sidebar,
+  ],
 
   templateUrl: './dashboard.html',
 
@@ -66,9 +60,6 @@ interface Order {
   ],
 })
 export class Dashboard implements OnInit {
- 
-  
-
   activeView = 'POS';
 
   menuItems: MenuItem[] = [];
@@ -96,7 +87,6 @@ export class Dashboard implements OnInit {
 
   orders: Order[] = [];
 
-
   submitted = false;
 
   constructor(
@@ -105,8 +95,8 @@ export class Dashboard implements OnInit {
     private cdr: ChangeDetectorRef,
   ) {}
   selectNav(id: string): void {
-  this.activeView = id;
-}
+    this.activeView = id;
+  }
   ngOnInit(): void {
     this.menuService.getMenuItems().subscribe({
       next: (items) => {
@@ -130,7 +120,6 @@ export class Dashboard implements OnInit {
     });
   }
 
-
   get filteredMenuItems(): MenuItem[] {
     return this.menuItems.filter((item) => {
       const categoryMatch =
@@ -146,25 +135,17 @@ export class Dashboard implements OnInit {
     const existingLine = this.cart.find((line) => line.item.id === item.id);
 
     if (existingLine) {
-      existingLine.quantity++;
+      this.cart = this.cart.map((line) =>
+        line.item.id === item.id ? { ...line, quantity: line.quantity + 1 } : line,
+      );
     } else {
-      this.cart.push({
-        item: item,
-
-        quantity: 1,
-      });
-    }
-  }
-
-  increaseQty(line: CartLine): void {
-    line.quantity++;
-  }
-
-  decreaseQty(line: CartLine): void {
-    if (line.quantity > 1) {
-      line.quantity--;
-    } else {
-      this.cart = this.cart.filter((item) => item !== line);
+      this.cart = [
+        ...this.cart,
+        {
+          item: item,
+          quantity: 1,
+        },
+      ];
     }
   }
 
